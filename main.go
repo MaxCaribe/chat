@@ -1,15 +1,15 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"encoding/json"
+	"log"
 	"net/http"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/chats", getChats)
+	http.HandleFunc("/chats", getChats)
 
-	router.Run("localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 type chat struct {
@@ -17,8 +17,22 @@ type chat struct {
 	Title string `json:"title"`
 }
 
-func getChats(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, chats)
+func getChats(writer http.ResponseWriter, request *http.Request) {
+	toJSON(chats, writer)
+}
+
+func toJSON(data any, writer http.ResponseWriter) {
+	jsonData, err := json.Marshal(data)
+	writer.Header().Set("Content-Type", "application/json")
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		errMessage, _ := json.Marshal("Error has occurred")
+		writer.Write(errMessage)
+		return
+	}
+
+	writer.Write(jsonData)
 }
 
 var chats = []chat{
