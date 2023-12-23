@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - ./tmp/postgresql/data:/var/lib/postgresql/data:delegated
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+  chat:
+    build:
+      context: .
+    command: go run .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
