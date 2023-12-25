@@ -1,12 +1,14 @@
 package main
 
 import (
+	"chat/database"
 	"encoding/json"
 	"log"
 	"net/http"
 )
 
 func main() {
+	database.Connection()
 	http.HandleFunc("/chats", getChats)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
