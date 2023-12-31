@@ -3,8 +3,12 @@ services:
     image: postgres
     volumes:
       - ./tmp/postgresql/data:/var/lib/postgresql/data:delegated
+      - ./database/init-pg:/docker-entrypoint-initdb.d:cached
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
   chat:
     build:
       context: .

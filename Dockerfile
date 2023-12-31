@@ -5,11 +5,10 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
-COPY database ./database
+COPY . ./
 
-RUN go build -o main .
+RUN go build -o /chat
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["/chat"]

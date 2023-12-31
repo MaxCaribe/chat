@@ -2,6 +2,7 @@ package main
 
 import (
 	"chat/database"
+	"chat/database/migrations"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -9,6 +10,8 @@ import (
 
 func main() {
 	database.Connection()
+	go migrations.Migrate()
+
 	http.HandleFunc("/chats", getChats)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
